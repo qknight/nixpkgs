@@ -212,6 +212,17 @@ rec {
     };
   };
 
+  odroidU3 = {
+    name = "odroidU3";
+    kernelMajor = "3.8";
+    kernelHeadersBaseConfig = "exynos4412-smdk4412";
+    kernelBaseConfig = "odroidu_defconfig";
+    kernelAutoModules = false;
+    kernelArch = "arm";
+    kernelTarget = "zImage";
+    uboot = null;
+  };
+
   raspberrypi2 = {
     name = "raspberrypi2";
     kernelMajor = "3.14";

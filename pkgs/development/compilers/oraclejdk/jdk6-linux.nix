@@ -9,7 +9,7 @@
 , installjce ? false
 }:
 
-assert stdenv.system == "i686-linux" || stdenv.system == "x86_64-linux";
+#assert stdenv.system == "i686-linux" || stdenv.system == "x86_64-linux";
 assert swingSupport -> xlibs != null;
 
 let

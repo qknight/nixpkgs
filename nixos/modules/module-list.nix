@@ -399,6 +399,7 @@
   ./system/boot/loader/gummiboot/gummiboot.nix
   ./system/boot/loader/init-script/init-script.nix
   ./system/boot/loader/raspberrypi/raspberrypi.nix
+  ./system/boot/loader/odroidU3/odroidU3.nix
   ./system/boot/luksroot.nix
   ./system/boot/modprobe.nix
   ./system/boot/shutdown.nix

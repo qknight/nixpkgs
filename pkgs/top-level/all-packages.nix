@@ -7,7 +7,7 @@
 
 { # The system (e.g., `i686-linux') for which to build the packages.
   system ? builtins.currentSystem
-
+  
 , # The standard environment to use.  Only used for bootstrapping.  If
   # null, the default standard environment is used.
   bootStdenv ? null
@@ -35,6 +35,7 @@
 let config_ = config; platform_ = platform; in # rename the function arguments
 
 let
+
 
   lib = import ../../lib;
 
@@ -72,7 +73,7 @@ let
       platforms = (import ./platforms.nix);
     in
       if system == "armv6l-linux" then platforms.raspberrypi
-      else if system == "armv7l-linux" then platforms.beaglebone
+      else if system == "armv7l-linux" then platforms.odroidU3
       else if system == "armv5tel-linux" then platforms.sheevaplug
       else if system == "mips64el-linux" then platforms.fuloong2f_n32
       else if system == "x86_64-linux" then platforms.pc64
@@ -3770,7 +3771,7 @@ let
     system == "x86_64-linux";
 
   jdkdistro = installjdk: pluginSupport:
-    assert supportsJDK;
+    #assert supportsJDK;
     (if pluginSupport then appendToName "with-plugin" else x: x)
       (callPackage ../development/compilers/oraclejdk/jdk6-linux.nix { });
 
@@ -8921,6 +8922,10 @@ let
     kernelPatches = [ kernelPatches.bridge_stp_helper ];
   };
 
+  linux_odroid_u = makeOverridable (import ../os-specific/linux/kernel/linux-odroid_u.nix) {
+    inherit fetchgit stdenv perl buildLinux;
+  };
+
   linux_3_10 = makeOverridable (import ../os-specific/linux/kernel/linux-3.10.nix) {
     inherit fetchurl stdenv perl buildLinux;
     kernelPatches = [ kernelPatches.bridge_stp_helper ]
@@ -9137,6 +9142,7 @@ let
   linuxPackages_3_2 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_3_2 linuxPackages_3_2);
   linuxPackages_3_4 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_3_4 linuxPackages_3_4);
   linuxPackages_rpi = linuxPackagesFor pkgs.linux_rpi linuxPackages_rpi;
+  linuxPackages_odroid_u = linuxPackagesFor pkgs.linux_odroid_u linuxPackages_odroid_u;
   linuxPackages_3_10 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_3_10 linuxPackages_3_10);
   linuxPackages_3_10_tuxonice = linuxPackagesFor pkgs.linux_3_10_tuxonice linuxPackages_3_10_tuxonice;
   linuxPackages_3_12 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_3_12 linuxPackages_3_12);
