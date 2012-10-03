@@ -1,9 +1,8 @@
 { stdenv, fetchurl, perl, gettext, makeWrapper, PerlMagick, YAML
 , TextMarkdown, URI, HTMLParser, HTMLScrubber, HTMLTemplate, TimeDate
 , CGISession, CGIFormBuilder, DBFile, LocaleGettext, RpcXML, XMLSimple
-, YAMLLibYAML, which, HTMLTree
+, YAMLLibYAML, which, HTMLTree, python, docutils
 , gitSupport ? false, git ? null
-, docutilsSupport ? false, python ? null, docutils ? null
 , monotoneSupport ? false, monotone ? null
 , bazaarSupport ? false, bazaar ? null
 , cvsSupport ? false, cvs ? null, cvsps ? null, Filechdir ? null
@@ -12,7 +11,6 @@
 , extraUtils ? []
 }:
 
-assert docutilsSupport -> (python != null && docutils != null);
 assert gitSupport -> (git != null);
 assert monotoneSupport -> (monotone != null);
 assert bazaarSupport -> (bazaar != null);
@@ -22,7 +20,7 @@ assert mercurialSupport -> (mercurial != null);
 
 let
   name = "ikiwiki";
-  version = "3.20120629";
+  version = "3.20120725";
 
   lib = stdenv.lib;
 in
@@ -31,13 +29,12 @@ stdenv.mkDerivation {
 
   src = fetchurl {
     url = "http://ftp.de.debian.org/debian/pool/main/i/ikiwiki/${name}_${version}.tar.gz";
-    sha256 = "7e39cdb727f261ce20fde5f0b05966680589a3d028c569780addd4b530382f07";
+    sha256 = "b600096a77b17e4a9e8a9552c4d36e01ed9217a0f8ff8a4f15110cf80e7adfad";
   };
 
   buildInputs = [ perl TextMarkdown URI HTMLParser HTMLScrubber HTMLTemplate
     TimeDate gettext makeWrapper DBFile CGISession CGIFormBuilder LocaleGettext
-    RpcXML XMLSimple PerlMagick YAML YAMLLibYAML which HTMLTree ]
-    ++ lib.optionals docutilsSupport [python docutils]
+    RpcXML XMLSimple PerlMagick YAML YAMLLibYAML which HTMLTree python docutils ] 
     ++ lib.optionals gitSupport [git]
     ++ lib.optionals monotoneSupport [monotone]
     ++ lib.optionals bazaarSupport [bazaar]
@@ -52,6 +49,10 @@ stdenv.mkDerivation {
     # State the gcc dependency, and make the cgi use our wrapper
     sed -i -e 's@$0@"'$out/bin/ikiwiki'"@' \
         -e "s@'cc'@'${stdenv.gcc}/bin/gcc'@" IkiWiki/Wrapper.pm
+    # fixing python support in the rst plugin
+    sed -i s@/usr/bin/env\ python@${python}/bin/python@ plugins/rst
+    # fixing lib/ikiwiki/plugins/proxy.py:#!/usr/bin/python
+    sed -i s@/usr/bin/python@${python}/bin/python@ plugins/proxy.py
   '';
 
   configurePhase = "perl Makefile.PL PREFIX=$out";
