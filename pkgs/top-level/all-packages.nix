@@ -1287,6 +1287,14 @@ let
   pdfread = callPackage ../tools/graphics/pdfread { };
 
   briss = callPackage ../tools/graphics/briss { };
+ 
+  brickd = callPackage ../servers/brickd { 
+    libusb = libusb1; 
+  };
+
+  brickv = callPackage ../applications/misc/brickv { 
+    inherit (pythonPackages) pyopengl;
+  };
 
   pdnsd = callPackage ../tools/networking/pdnsd { };
 

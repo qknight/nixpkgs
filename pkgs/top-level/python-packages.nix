@@ -1018,6 +1018,47 @@ let pythonPackages = python.modules // rec {
     };
   };
 
+  pyqwt = buildPythonPackage rec {
+   name = "pyqwt-${version}";
+   version = "5.2.0";
+
+   src = fetchurl {
+     url = "http://prdownloads.sourceforge.net/pyqwt/PyQwt-${version}.tar.gz";
+     sha256 = "02z7g60sjm3hx7b21dd8cjv73w057dwpgyyz24f701vdqzhcga4q";
+   };
+
+   doCheck = false;
+
+   buildInputs = [ pkgs.pyqt4 pkgs.qwt ];
+   configurePhase = ''
+     # forcefully prevent usage of local 5.2.0 version of qwt
+     rm -Rf qwt-5.2
+     cd configure
+     python configure.py -Q ${pkgs.qwt} --module-install-path=$out/lib/python2.7/site-packages/PyQt4/Qwt5 
+   '';
+
+   buildPhase = ''
+     make
+     # this fix is needed to not install into /nix/store/hsw6467l0bw50xgkdxjgah0wnlywx4vq-PyQt-x11-gpl-4.9.1/share
+     substituteInPlace "qwt5qt4/Makefile"                            \
+               --replace "/nix/store/hsw6467l0bw50xgkdxjgah0wnlywx4vq-PyQt-x11-gpl-4.9.1" \
+               "$out"
+     '';
+
+   installCommand = ''
+     make install
+     echo "PyQt4/Qwt5/" > $out/lib/python2.7/site-packages/Qwt5.pth
+   '';
+
+   meta = {
+     homepage = https://sourceforge.net/projects/pyqwt/;
+     description = "PyQwt = FAST and EASY data plotting for Numerical Python and PyQt.PyQwt is a Python wrapper for the Qwt C++ class library which extends the Qt frameworkwith widgets to display and control data for scientific and engineering applications.";
+     license = "GPL";
+   };
+  };
+
+  
+
 
   libcloud = buildPythonPackage (rec {
     name = "libcloud-0.3.1";
