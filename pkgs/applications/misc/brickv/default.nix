@@ -30,6 +30,13 @@ stdenv.mkDerivation {
   '';
 
   installPhase = ''
+    cd ..
+    for i in brickv/plot_widget.py brickv/plugin_system/plugins/servo/servo.py brickv/plugin_system/plugins/stepper/speedometer.py brickv/plugin_system/plugins/imu/imu.py brickv/plugin_system/plugins/rotary_poti/rotary_poti.py brickv/plugin_system/plugins/dc/speedometer.py; do 
+        substituteInPlace $i --replace "PyQt4.Qwt5" "Qwt"
+    done
+    cd brickv
+
+
     mkdir -p $out/bin
     mkdir -p $out/lib/python2.7/site-packages/brickv
 
