@@ -1034,9 +1034,12 @@ let pythonPackages = python.modules // rec {
      # forcefully prevent usage of local 5.2.0 version of qwt
      #rm -Rf qwt-5.2
      cd configure
-     python configure.py --module-install-path=$out/lib/python2.7/site-packages/Qwt
+     # with this path it should work out of the box
+     #python configure.py --module-install-path=$out/lib/python2.7/site-packages/Qwt
+     # since Qwt5 is usually a subpackage of PyQt4 this path might make more sense
      #python configure.py --module-install-path=$out/lib/python2.7/site-packages/PyQt4/Qwt5 
-     #python configure.py -Q ${pkgs.qwt} --module-install-path=$out/lib/python2.7/site-packages/PyQt4/Qwt5 
+     # in theory this would be the best option but it results in a broken init
+     python configure.py -Q ${pkgs.qwt} --module-install-path=$out/lib/python2.7/site-packages/PyQt4/Qwt5 -I${pkgs.qwt}/include/qwt
    '';
 
    buildPhase = ''
