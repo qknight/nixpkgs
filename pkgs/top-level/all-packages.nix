@@ -8130,6 +8130,8 @@ let
     inherit (gnome) gnomedocutils libgnome libglade libgnomeui scrollkeeper;
   };
 
+  etherpad = callPackage ../webapp/etherpad-lite { };
+
   evopedia = callPackage ../applications/misc/evopedia { };
 
   keepassx = callPackage ../applications/misc/keepassx { };
