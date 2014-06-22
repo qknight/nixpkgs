@@ -1,0 +1,21 @@
+diff --git a/src/node/utils/Settings.js b/src/node/utils/Settings.js
+index 4c6b7ea..1e00b6b 100644
+--- a/src/node/utils/Settings.js
++++ b/src/node/utils/Settings.js
+@@ -172,7 +172,13 @@ exports.abiwordAvailable = function()
+ exports.reloadSettings = function reloadSettings() {
+   // Discover where the settings file lives
+   var settingsFilename = argv.settings || "settings.json";
+-  settingsFilename = path.resolve(path.join(exports.root, settingsFilename));
++
++  if (path.resolve(settingsFilename)===settingsFilename)
++    settingsFilename = path.resolve(settingsFilename);
++  else
++    settingsFilename = path.resolve(path.join(exports.root, settingsFilename));
++
++
+ 
+   var settingsStr;
+   try{
+
+

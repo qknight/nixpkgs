@@ -168,6 +168,7 @@
   ./services/network-filesystems/openafs-client/default.nix
   ./services/network-filesystems/rsyncd.nix
   ./services/network-filesystems/samba.nix
+  ./services/networking/etherpad-lite.nix
   ./services/networking/amuled.nix
   ./services/networking/avahi-daemon.nix
   ./services/networking/bind.nix
