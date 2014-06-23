@@ -234,7 +234,6 @@ in
     };
   };
 
-
   ###### implementation
 
   config = mkIf config.services.etherpad.enable {
@@ -247,20 +246,17 @@ in
       home = "/var/empty";
     };
 
-    jobs.etherpad = { 
-        description = "Etherpad is a highly customizable Open Source online editor providing collaborative editing in really real-time.";
-      
-        startOn = "started network-interfaces";
+    systemd.services.etherpad = { 
+      path = [ pkgs.etherpad ];
+ 
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
 
-        daemonType = "fork";
-        #tmpDir=$(mktemp -t -d etherpad.XXXXXX)
-
-        script = ''
-            cd ${pkgs.etherpad}
-            ${pkgs.nodejs}/bin/node ${pkgs.etherpad}/node_modules/ep_etherpad-lite/node/server.js --settings ${configFile}
-          '';
+      serviceConfig = {
+        ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.etherpad}/node_modules/ep_etherpad-lite/node/server.js --settings ${configFile}";
+        WorkingDirectory = "${pkgs.etherpad}";
       };
-
+    };
   };
 }
 
