@@ -20,13 +20,13 @@ stdenv.mkDerivation {
   buildPhase = ''
     make
     # HOME=. is a hack to make npm work, i needs to write ~/.npm and ~/.node-gyp/ 
+    #HOME=. npm install ep_table_of_contents
+    #HOME=. npm install ep_markdown
     HOME=. bin/installDeps.sh
     echo -e "done\n" > src/.ep_initialized
     echo "22e064455007a45719a7da3db34214c32002713b91970dae651d9f00baa6bd0a#" > APIKEY.txt
   '';
   installPhase = ''
-    #HOME=. npm install ep_table_of_contents
-    #HOME=. npm install ep_markdown
     mkdir -p $out
     cp -R * $out
   '';

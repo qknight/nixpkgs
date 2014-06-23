@@ -253,9 +253,9 @@ in
         startOn = "started network-interfaces";
 
         daemonType = "fork";
+        #tmpDir=$(mktemp -t -d etherpad.XXXXXX)
 
-        exec = ''
-            #! ${pkgs.stdenv.shell}
+        script = ''
             cd ${pkgs.etherpad}
             ${pkgs.nodejs}/bin/node ${pkgs.etherpad}/node_modules/ep_etherpad-lite/node/server.js --settings ${configFile}
           '';
