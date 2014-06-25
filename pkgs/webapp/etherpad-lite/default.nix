@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, unzip, nodejs, bash, curl, postgresql, python, utillinux}:
+{ stdenv, fetchurl, unzip, nodejs, bash, curl, postgresql, python, utillinux }:
 
 stdenv.mkDerivation {
   name = "etherpad-lite-1.4.0";
@@ -9,14 +9,18 @@ stdenv.mkDerivation {
   };
 
   # utillinux for flock, needed by node_modules/ueberDB/node_modules/pg/build
-  buildInputs = [ nodejs unzip bash curl postgresql python utillinux];
+  buildInputs = [ nodejs unzip bash curl postgresql python utillinux ];
  
-  phases = "unpackPhase patchPhase buildPhase installPhase";
+  phases = "unpackPhase configurePhase patchPhase buildPhase installPhase";
 
   patches = [
     ./abs-path.patch
   ];
 
+  configurePhase = ''
+    #npm2nix
+  '';
+ 
   buildPhase = ''
     make
     # HOME=. is a hack to make npm work, i needs to write ~/.npm and ~/.node-gyp/ 
