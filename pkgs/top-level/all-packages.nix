@@ -2011,6 +2011,10 @@ let
     libusb = libusb1; 
   };
 
+  brickv = callPackage ../applications/misc/brickv {
+    #inherit python pyqt4 pyopengl pyserial;
+  };
+
   bully = callPackage ../tools/networking/bully { };
 
   pdnsd = callPackage ../tools/networking/pdnsd { };

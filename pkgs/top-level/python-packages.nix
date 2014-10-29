@@ -4633,6 +4633,58 @@ let
     };
   };
 
+  pyqwt = buildPythonPackage rec {
+    name = "pyqwt-${version}";
+    version = "5.2.0";
+
+    src = pkgs.fetchurl {
+      url = "http://prdownloads.sourceforge.net/pyqwt/PyQwt-${version}.tar.gz";
+      sha256 = "02z7g60sjm3hx7b21dd8cjv73w057dwpgyyz24f701vdqzhcga4q";
+    };
+
+    doCheck = false;
+
+    buildInputs = [ pkgs.pyqt4 pkgs.qwt ];
+    configurePhase = ''
+      # forcefully prevent usage of bundled 5.2.0 version of qwt
+      rm -Rf qwt-5.2
+      cd configure
+      # with this path it should work out of the box
+      #python configure.py --module-install-path=$out/lib/python2.7/site-packages/Qwt
+      # since Qwt5 is usually a subpackage of PyQt4 this path might make more sense
+      #python configure.py --module-install-path=$out/lib/python2.7/site-packages/PyQt4/Qwt5 
+      # in theory this would be the best option but it results in a broken init
+      python configure.py -Q ${pkgs.qwt} --module-install-path=$out/lib/python2.7/site-packages/PyQt4/Qwt5 -I${pkgs.qwt}/include/qwt
+    '';
+
+    buildPhase = ''
+      make
+      # this fix is needed to not install into /nix/store/hsw6467l0bw50xgkdxjgah0wnlywx4vq-PyQt-x11-gpl-4.9.1/share
+      # FIXME hardcoded path!
+      substituteInPlace "qwt5qt4/Makefile"                            \
+                --replace "/nix/store/hsw6467l0bw50xgkdxjgah0wnlywx4vq-PyQt-x11-gpl-4.9.1" \
+                "$out"
+      cd ..
+      # FIXME right now the python lib is renamed to Qwt but maybe Qwt5 would be better
+      for i in configure/qwt5qt4/ipy_user_conf.py configure/tmp-qwt5qt4/ipy_user_conf.py qt3examples/CurveDemo2.py qt3examples/CPUplot.py qt3examples/CurveDemo3.py qt4examples/ErrorBarDemo.py qt4examples/EventFilterDemo.py qt4examples/CurveDemo1.py qt4examples/ImagePlotDemo.py qt4examples/SliderDemo.py qt4examples/CurveDemo2.py qt4examples/SimpleDemo.py qt4examples/DataDemo.py qt4examples/MapDemo.py qt4examples/DialDemo.py qt4examples/Grab.py qt4examples/CPUplot.py qt4examples/BodeDemo.py qt4examples/RadioDemo.py qt4examples/MultiDemo.py qt4examples/HistogramDemo.py qt4examples/ReallySimpleDemo.py qt4examples/SpectrogramDemo.py qt4examples/CartesianDemo.py qt4examples/CurveDemo3.py qt4examples/MaskedDataDemo.py qt4examples/BarPlotDemo.py qt4lib/PyQt4/Qwt5/ipy_user_conf.py sphinx/build/html/_sources/reference.txt sphinx/reference.rst; do
+        substituteInPlace $i --replace "PyQt4.Qwt5" "Qwt"
+      done
+    '';
+
+    installCommand = ''
+      cd configure
+      make install
+      #echo "PyQt4/Qwt5/" > $out/lib/python2.7/site-packages/Qwt.pth
+    '';
+
+    meta = {
+      homepage = https://sourceforge.net/projects/pyqwt/;
+      description = "FAST and EASY data plotting for Numerical Python and PyQt.PyQwt is a Python wrapper for the Qwt C++ class library which extends the Qt frameworkwith widgets to display and control data for scientific and engineering applications.";
+      license = "GPL";
+      maintainers = [ stdenv.lib.maintainers.qknight ];
+    };
+  };
+
 
   libcloud = buildPythonPackage (rec {
     name = "libcloud-0.14.1";
