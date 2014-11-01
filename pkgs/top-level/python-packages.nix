@@ -4659,14 +4659,12 @@ let
 
     buildPhase = ''
       make
-      # this fix is needed to not install into /nix/store/hsw6467l0bw50xgkdxjgah0wnlywx4vq-PyQt-x11-gpl-4.9.1/share
       # FIXME hardcoded path!
       substituteInPlace "qwt5qt4/Makefile"                            \
-                --replace "/nix/store/hsw6467l0bw50xgkdxjgah0wnlywx4vq-PyQt-x11-gpl-4.9.1" \
+                --replace "${pkgs.pyqt4}" \
                 "$out"
       cd ..
       # FIXME right now the python lib is renamed to Qwt but maybe Qwt5 would be better
-      echo "hello world"
       for i in configure/qwt5qt4/ipy_user_conf.py configure/tmp-qwt5qt4/ipy_user_conf.py qt3examples/CurveDemo2.py qt3examples/CPUplot.py qt3examples/CurveDemo3.py qt4examples/ErrorBarDemo.py qt4examples/EventFilterDemo.py qt4examples/CurveDemo1.py qt4examples/ImagePlotDemo.py qt4examples/SliderDemo.py qt4examples/CurveDemo2.py qt4examples/SimpleDemo.py qt4examples/DataDemo.py qt4examples/MapDemo.py qt4examples/DialDemo.py qt4examples/Grab.py qt4examples/CPUplot.py qt4examples/BodeDemo.py qt4examples/RadioDemo.py qt4examples/MultiDemo.py qt4examples/HistogramDemo.py qt4examples/ReallySimpleDemo.py qt4examples/SpectrogramDemo.py qt4examples/CartesianDemo.py qt4examples/CurveDemo3.py qt4examples/MaskedDataDemo.py qt4examples/BarPlotDemo.py qt4lib/PyQt4/Qwt5/ipy_user_conf.py sphinx/build/html/_sources/reference.txt sphinx/reference.rst; do
         substituteInPlace $i --replace "PyQt4.Qwt5" "Qwt"
       done

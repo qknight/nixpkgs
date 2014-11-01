@@ -1,29 +1,22 @@
-{ stdenv, fetchgit, python27Packages, pythonPackages, setuptools } :
-
-let
-  py = python27Packages;
-in
+{ stdenv, fetchgit, pythonPackages, setuptools } :
 
 stdenv.mkDerivation rec {
   name = "brickv-${version}";
-  version = "2.1.1";
+  version = "2.1.2";
   
   src = fetchgit {
     url = "git://github.com/Tinkerforge/brickv.git";
-    rev = "refs/tags/brickv-${version}";
-    sha256 = "097kaz7d0rzg0ijvcna3y620k3m5fgxpqsac5gbhah8pd7vlj1a4";
+    rev = "refs/tags/v${version}";
+    #rev = "4eafdd0b6faa766c4545f3bb1b467311e615c12d";
+    sha256 = "036p3n9l9fixqk4kxach0bx8sb24s9f4z86x0vph38bs62nbygl3";
   };
 
-  
-  python_deps = with py; [ pyopengl pyserial setuptools pythonPackages.pyqwt pythonPackages.wrapPython];
+  buildInputs = with pythonPackages; [ python pyqt4 pyopengl pyqwt wrapPython ];
 
+  python_deps = with pythonPackages; [ pyopengl pyserial setuptools pythonPackages.pyqwt pythonPackages.wrapPython];
   pythonPath = python_deps;
-
   propagatedBuildInputs = python_deps;
 
-  buildInputs = [ py.wrapPython ];
-
-  #buildInputs = [ python pyqt4 pyopengl pythonPackages.pyqwt pythonPackages.wrapPython ];
   #pythonPath = [ pyqt4 pyopengl pythonPackages.pyqwt ];
 
   #zzz = ''
@@ -39,11 +32,12 @@ stdenv.mkDerivation rec {
   #'';
 
   buildPhase = ''
-    cd src/brickv
-    ${py.python}/bin/python build_all_ui.py
+    cd src
+    ${pythonPackages.python}/bin/python build_all_ui.py
   '';
 
   installPhase = ''
+    cd brickv
     mkdir -p $out/bin
     mkdir -p $out/lib/python2.7/site-packages/brickv
 
