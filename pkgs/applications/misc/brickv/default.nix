@@ -12,24 +12,22 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = with pythonPackages; [ python pyqt4 pyopengl pyqwt wrapPython ];
-
-  python_deps = with pythonPackages; [ pyopengl pyserial setuptools pythonPackages.pyqwt pythonPackages.wrapPython];
+  python_deps = with pythonPackages; [ python pyqt4 pyopengl pyqwt wrapPython pyserial setuptools ];
   pythonPath = python_deps;
   propagatedBuildInputs = python_deps;
 
-  #pythonPath = [ pyqt4 pyopengl pythonPackages.pyqwt ];
+  zzz = ''
+    import sys
+    sys.path.append(os.path.join(os.path.dirname(__file__), "../lib/python2.7/site-packages/brickv"))
+  '';
 
-  #zzz = ''
-  #  import sys
-  #  import os
-  #  sys.path.append(os.path.join(os.path.dirname(__file__), "../lib/python2.7/site-packages/brickv"))
-  #'';
-
-  #prePatch = ''
-  #  substituteInPlace src/brickv/main.py --replace "import sys" "$zzz"
-  #  substituteInPlace src/brickv/build_ui.py --replace "/usr/bin/env python" "${python}/bin/python"
-  #  substituteInPlace src/brickv/build_all_ui.py --replace "/usr/bin/env python" "${python}/bin/python"
-  #'';
+  prePatch = ''
+    substituteInPlace src/brickv/main.py --replace "import sys" "$zzz"
+    find . -name \*.py | while read i
+      do
+        sed -i -e "s|#!/usr/bin/env python|#!${pythonPackages.python}/bin/python|" $i
+      done
+  '';
 
   buildPhase = ''
     cd src

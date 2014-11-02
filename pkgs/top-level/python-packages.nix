@@ -4673,7 +4673,7 @@ let
     installPhase = ''
       cd configure
       make install
-      #echo "PyQt4/Qwt5/" > $out/lib/python2.7/site-packages/Qwt.pth
+      echo "PyQt4/Qwt5/" > $out/lib/python2.7/site-packages/Qwt.pth
     '';
 
     meta = {
