@@ -7,7 +7,6 @@ stdenv.mkDerivation rec {
   src = fetchgit {
     url = "git://github.com/Tinkerforge/brickv.git";
     rev = "refs/tags/v${version}";
-    #rev = "4eafdd0b6faa766c4545f3bb1b467311e615c12d";
     sha256 = "036p3n9l9fixqk4kxach0bx8sb24s9f4z86x0vph38bs62nbygl3";
   };
 
@@ -16,13 +15,13 @@ stdenv.mkDerivation rec {
   pythonPath = python_deps;
   propagatedBuildInputs = python_deps;
 
-  zzz = ''
-    import sys
-    sys.path.append(os.path.join(os.path.dirname(__file__), "../lib/python2.7/site-packages/brickv"))
-  '';
+  #zzz = ''
+  #  import sys
+  #  sys.path.append(os.path.join(os.path.dirname(__file__), "../lib/python2.7/site-packages/brickv"))
+  #'';
 
   prePatch = ''
-    substituteInPlace src/brickv/main.py --replace "import sys" "$zzz"
+    #substituteInPlace src/brickv/main.py --replace "import sys" "$zzz"
     find . -name \*.py | while read i
       do
         sed -i -e "s|#!/usr/bin/env python|#!${pythonPackages.python}/bin/python|" $i
@@ -35,14 +34,20 @@ stdenv.mkDerivation rec {
   '';
 
   installPhase = ''
-    cd brickv
     mkdir -p $out/bin
-    mkdir -p $out/lib/python2.7/site-packages/brickv
+    mkdir -p $out/share
 
-    mv main.py $out/bin/brickv
-    mv * $out/lib/python2.7/site-packages/brickv
+    cd brickv
+    mv * $out/share
 
-    wrapPythonPrograms
+    # replace the tinkerforge wrapper by nixified one
+    echo "#!/bin/sh" > brickv
+    # FIXME, $@ is missing
+    echo "/bin/sh $out/share/main.py \"$@\"" >> brickv
+    chmod u+x brickv
+    mv brickv $out/bin
+  
+    wrapPythonPrograms;
   '';
 
   meta = {
