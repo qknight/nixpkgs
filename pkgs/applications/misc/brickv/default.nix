@@ -22,6 +22,13 @@ stdenv.mkDerivation rec {
 
   prePatch = ''
     #substituteInPlace src/brickv/main.py --replace "import sys" "$zzz"
+    # since Qwt5 is not installed into pyqt4, we change the library name to include
+    find . -name \*.py | while read i
+      do
+        sed -i -e "s|PyQt4.Qwt5|Qwt5|" $i
+      done
+
+    # substitute python binary related things
     find . -name \*.py | while read i
       do
         sed -i -e "s|#!/usr/bin/env python|#!${pythonPackages.python}/bin/python|" $i
@@ -43,7 +50,7 @@ stdenv.mkDerivation rec {
     # replace the tinkerforge wrapper by nixified one
     echo "#!/bin/sh" > brickv
     # FIXME, $@ is missing
-    echo "/bin/sh $out/share/main.py \"$@\"" >> brickv
+    echo "/bin/sh $out/share/main.py \"\$@\"" >> brickv
     chmod u+x brickv
     mv brickv $out/bin
   
