@@ -4637,15 +4637,15 @@ let
     name = "pyqwt-${version}";
     version = "5.2.0";
 
-    #src = fetchurl {
-    #  url = "http://archive.ubuntu.com/ubuntu/pool/universe/p/pyqwt5/pyqwt5_5.2.1~cvs20091107+dfsg-7build1.debian.tar.gz";
-    #  sha256 = "";
-    #};
-
     src = pkgs.fetchurl {
-      url = "http://prdownloads.sourceforge.net/pyqwt/PyQwt-${version}.tar.gz";
-      sha256 = "02z7g60sjm3hx7b21dd8cjv73w057dwpgyyz24f701vdqzhcga4q";
+      url = "https://lastlog.de/misc/pyqwt5_5.2.1-cvs20091107+dfsg.orig.tar.gz";
+      sha256 = "02d4bbf489d5f037728a5353e40f2d89df7cb53806129d53a6a9b60c32aa8c84";
     };
+
+    #src = pkgs.fetchurl {
+    #  url = "http://prdownloads.sourceforge.net/pyqwt/PyQwt-${version}.tar.gz";
+    #  sha256 = "02z7g60sjm3hx7b21dd8cjv73w057dwpgyyz24f701vdqzhcga4q";
+    #};
 
     doCheck = false;
 
@@ -4653,12 +4653,8 @@ let
     configurePhase = ''
       # forcefully prevent usage of bundled 5.2.0 version of qwt
       rm -Rf qwt-5.2
+
       cd configure
-
-      # since Qwt5 is usually a subpackage of PyQt4 this path might make more sense
-      # --module-install-path=$out/lib/python2.7/site-packages/PyQt4/Qwt5 
-
-      # in theory this would be the best option but it results in a broken init
       python configure.py -Q ${pkgs.qwt} --module-install-path=$out/lib/python2.7/site-packages/Qwt5 -I${pkgs.qwt}/include/qwt
     '';
 
@@ -4670,16 +4666,20 @@ let
                 "$out"
       cd ..
       # rename from PyQt4.Qwt5 to Qwt5 (since we don't install it into the PyQt4 store path!
-      for i in configure/qwt5qt4/ipy_user_conf.py configure/tmp-qwt5qt4/ipy_user_conf.py qt3examples/CurveDemo2.py qt3examples/CPUplot.py qt3examples/CurveDemo3.py qt4examples/ErrorBarDemo.py qt4examples/EventFilterDemo.py qt4examples/CurveDemo1.py qt4examples/ImagePlotDemo.py qt4examples/SliderDemo.py qt4examples/CurveDemo2.py qt4examples/SimpleDemo.py qt4examples/DataDemo.py qt4examples/MapDemo.py qt4examples/DialDemo.py qt4examples/Grab.py qt4examples/CPUplot.py qt4examples/BodeDemo.py qt4examples/RadioDemo.py qt4examples/MultiDemo.py qt4examples/HistogramDemo.py qt4examples/ReallySimpleDemo.py qt4examples/SpectrogramDemo.py qt4examples/CartesianDemo.py qt4examples/CurveDemo3.py qt4examples/MaskedDataDemo.py qt4examples/BarPlotDemo.py qt4lib/PyQt4/Qwt5/ipy_user_conf.py sphinx/build/html/_sources/reference.txt sphinx/reference.rst; do
-        substituteInPlace $i --replace "PyQt4.Qwt5" "Qwt5"
-      done
+      #for i in configure/qwt5qt4/ipy_user_conf.py configure/tmp-qwt5qt4/ipy_user_conf.py qt3examples/CurveDemo2.py qt3examples/CPUplot.py qt3examples/CurveDemo3.py qt4examples/ErrorBarDemo.py qt4examples/EventFilterDemo.py qt4examples/CurveDemo1.py qt4examples/ImagePlotDemo.py qt4examples/SliderDemo.py qt4examples/CurveDemo2.py qt4examples/SimpleDemo.py qt4examples/DataDemo.py qt4examples/MapDemo.py qt4examples/DialDemo.py qt4examples/Grab.py qt4examples/CPUplot.py qt4examples/BodeDemo.py qt4examples/RadioDemo.py qt4examples/MultiDemo.py qt4examples/HistogramDemo.py qt4examples/ReallySimpleDemo.py qt4examples/SpectrogramDemo.py qt4examples/CartesianDemo.py qt4examples/CurveDemo3.py qt4examples/MaskedDataDemo.py qt4examples/BarPlotDemo.py qt4lib/PyQt4/Qwt5/ipy_user_conf.py sphinx/build/html/_sources/reference.txt sphinx/reference.rst; do
+      #  substituteInPlace $i --replace "PyQt4.Qwt5" "Qwt5"
+      #done
+      # if the above lines are activated, this error occures then:
+      #cat: sphinx/build/html/_sources/reference.txt: No such file or directory
+      #/nix/store/q4kb35wfj35893z8qddlil98yc1akkgc-stdenv/setup: line 363: sphinx/build/html/_sources/reference.txt.tmp: No such file or directory
+      #note: keeping build directory `/tmp/nix-build-python2.7-pyqwt-5.2.0.drv-12'
     '';
 
     installPhase = ''
       cd configure
       make install
-      #echo "Qwt5/" > $out/lib/python2.7/site-packages/Qwt.pth
-      #echo "Qwt5/" > $out/lib/python2.7/site-packages/Qwt5.pth
+      echo "Qwt5/" > $out/lib/python2.7/site-packages/Qwt.pth
+      echo "Qwt5/" > $out/lib/python2.7/site-packages/Qwt5.pth
     '';
 
     meta = {
