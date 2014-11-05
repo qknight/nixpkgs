@@ -4635,18 +4635,18 @@ let
 
   pyqwt = buildPythonPackage rec {
     name = "pyqwt-${version}";
-    #version = "5.2.0";
-    version = "5.2.1";
+    version = "5.2.0";
+
+    #version = "5.2.1";
+    #src = pkgs.fetchurl {
+    #  url = "https://lastlog.de/misc/pyqwt5_5.2.1-cvs20091107+dfsg.orig.tar.gz";
+    #  sha256 = "02d4bbf489d5f037728a5353e40f2d89df7cb53806129d53a6a9b60c32aa8c84";
+    #};
 
     src = pkgs.fetchurl {
-      url = "https://lastlog.de/misc/pyqwt5_5.2.1-cvs20091107+dfsg.orig.tar.gz";
-      sha256 = "02d4bbf489d5f037728a5353e40f2d89df7cb53806129d53a6a9b60c32aa8c84";
+      url = "http://prdownloads.sourceforge.net/pyqwt/PyQwt-${version}.tar.gz";
+      sha256 = "02z7g60sjm3hx7b21dd8cjv73w057dwpgyyz24f701vdqzhcga4q";
     };
-
-    #src = pkgs.fetchurl {
-    #  url = "http://prdownloads.sourceforge.net/pyqwt/PyQwt-${version}.tar.gz";
-    #  sha256 = "02z7g60sjm3hx7b21dd8cjv73w057dwpgyyz24f701vdqzhcga4q";
-    #};
 
     doCheck = false;
 
