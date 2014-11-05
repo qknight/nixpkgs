@@ -1,0 +1,26 @@
+diff --git a/qwtconfig.pri b/qwtconfig.pri
+index 1a56bfb..3ad540d 100644
+--- a/qwtconfig.pri
++++ b/qwtconfig.pri
+@@ -7,12 +7,14 @@ VER_MIN      = 2
+ VER_PAT      = 3
+ VERSION      = $${VER_MAJ}.$${VER_MIN}.$${VER_PAT}
+ 
+-unix {
+-    INSTALLBASE    = /usr/local/qwt-$$VERSION
+-}
+-
+-win32 {
+-    INSTALLBASE    = C:/Qwt-$$VERSION
++isEmpty(INSTALLBASE) {
++    unix {
++        INSTALLBASE    = /usr/local/qwt-$$VERSION
++    }
++    
++    win32 {
++        INSTALLBASE    = C:/Qwt-$$VERSION
++    }
+ }
+ 
+ target.path    = $$INSTALLBASE/lib
+

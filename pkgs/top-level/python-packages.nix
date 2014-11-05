@@ -4635,7 +4635,8 @@ let
 
   pyqwt = buildPythonPackage rec {
     name = "pyqwt-${version}";
-    version = "5.2.0";
+    #version = "5.2.0";
+    version = "5.2.1";
 
     src = pkgs.fetchurl {
       url = "https://lastlog.de/misc/pyqwt5_5.2.1-cvs20091107+dfsg.orig.tar.gz";
@@ -4649,13 +4650,12 @@ let
 
     doCheck = false;
 
-    buildInputs = [ pkgs.pyqt4 pkgs.qwt ];
-    configurePhase = ''
-      # forcefully prevent usage of bundled 5.2.0 version of qwt
-      rm -Rf qwt-5.2
+    buildInputs = with self; [ pkgs.pyqt4 pkgs.qwt numpy ];
+    propagatedBuildInputs = with self; [ numpy pyqt4 ];
 
+    configurePhase = ''
       cd configure
-      python configure.py -Q ${pkgs.qwt} --module-install-path=$out/lib/python2.7/site-packages/Qwt5 -I${pkgs.qwt}/include/qwt
+      python configure.py -Q ${pkgs.qwt} --module-install-path=$out/lib/python2.7/site-packages/Qwt5 -I ${pkgs.qwt}/include/qwt
     '';
 
     buildPhase = ''
@@ -4666,21 +4666,22 @@ let
                 "$out"
       cd ..
       # rename from PyQt4.Qwt5 to Qwt5 (since we don't install it into the PyQt4 store path!
-      #for i in configure/qwt5qt4/ipy_user_conf.py configure/tmp-qwt5qt4/ipy_user_conf.py qt3examples/CurveDemo2.py qt3examples/CPUplot.py qt3examples/CurveDemo3.py qt4examples/ErrorBarDemo.py qt4examples/EventFilterDemo.py qt4examples/CurveDemo1.py qt4examples/ImagePlotDemo.py qt4examples/SliderDemo.py qt4examples/CurveDemo2.py qt4examples/SimpleDemo.py qt4examples/DataDemo.py qt4examples/MapDemo.py qt4examples/DialDemo.py qt4examples/Grab.py qt4examples/CPUplot.py qt4examples/BodeDemo.py qt4examples/RadioDemo.py qt4examples/MultiDemo.py qt4examples/HistogramDemo.py qt4examples/ReallySimpleDemo.py qt4examples/SpectrogramDemo.py qt4examples/CartesianDemo.py qt4examples/CurveDemo3.py qt4examples/MaskedDataDemo.py qt4examples/BarPlotDemo.py qt4lib/PyQt4/Qwt5/ipy_user_conf.py sphinx/build/html/_sources/reference.txt sphinx/reference.rst; do
-      #  substituteInPlace $i --replace "PyQt4.Qwt5" "Qwt5"
-      #done
-      # if the above lines are activated, this error occures then:
-      #cat: sphinx/build/html/_sources/reference.txt: No such file or directory
-      #/nix/store/q4kb35wfj35893z8qddlil98yc1akkgc-stdenv/setup: line 363: sphinx/build/html/_sources/reference.txt.tmp: No such file or directory
-      #note: keeping build directory `/tmp/nix-build-python2.7-pyqwt-5.2.0.drv-12'
+      find . -name \*.py | while read i
+      do
+        sed -i -e "s|PyQt4.Qwt5|Qwt5|" $i
+      done
     '';
 
     installPhase = ''
+      mkdir -p $out/examples
+      cp -R qt4examples/* $out/examples/
       cd configure
       make install
-      echo "Qwt5/" > $out/lib/python2.7/site-packages/Qwt.pth
-      echo "Qwt5/" > $out/lib/python2.7/site-packages/Qwt5.pth
+      #echo "Qwt5/" > $out/lib/python2.7/site-packages/Qwt.pth
+      #echo "Qwt5/" > $out/lib/python2.7/site-packages/Qwt5.pth
     '';
+
+    postFixup = "wrapPythonPrograms";
 
     meta = {
       homepage = https://sourceforge.net/projects/pyqwt/;
