@@ -4651,7 +4651,7 @@ let
     doCheck = false;
 
     buildInputs = with self; [ pkgs.pyqt4 pkgs.qwt numpy ];
-    propagatedBuildInputs = with self; [ numpy pyqt4 ];
+    propagatedBuildInputs = with self; [ numpy pyqt4 pkgs.sip];
 
     configurePhase = ''
       cd configure
