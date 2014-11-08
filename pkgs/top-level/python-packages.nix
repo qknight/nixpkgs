@@ -4635,6 +4635,7 @@ let
 
   # my bug report
   # http://sourceforge.net/p/pyqwt/mailman/message/30306862/
+  # http://lists.cairographics.org/archives/cairo/2013-May/024334.html
   pyqwt = buildPythonPackage rec {
     name = "pyqwt-${version}";
     version = "5.2.0";
@@ -4699,8 +4700,7 @@ let
       cp -R qt4examples/* $out/examples/
       cd configure
       make install
-      #echo "Qwt5/" > $out/lib/python2.7/site-packages/Qwt.pth
-      #echo "Qwt5/" > $out/lib/python2.7/site-packages/Qwt5.pth
+      echo "Qwt5/" > $out/lib/python2.7/site-packages/Qwt.pth
     '';
 
     postFixup = "wrapPythonPrograms";
