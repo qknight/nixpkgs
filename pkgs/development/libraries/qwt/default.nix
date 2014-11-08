@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, qt4 }:
+{ stdenv, fetchurl, qt4, pkgs}:
 
 stdenv.mkDerivation rec {
   #name = "qwt-5.2.3";
@@ -8,10 +8,14 @@ stdenv.mkDerivation rec {
   #};
   #patches = [ ./prefix-5.2.3.diff ];
 
+  name = "qwt-${version}";
+  version = "5.2.0";
   src = pkgs.fetchurl {
     url = "http://prdownloads.sourceforge.net/pyqwt/PyQwt-${version}.tar.gz";
     sha256 = "02z7g60sjm3hx7b21dd8cjv73w057dwpgyyz24f701vdqzhcga4q";
   };
+  patches = [ ./prefix-5.2.0.diff ];
+
 
   #name = "qwt-5.2.1";
   #patches = [ ./prefix-5.2.1.diff ];
@@ -30,10 +34,13 @@ stdenv.mkDerivation rec {
   propagatedBuildInputs = [ qt4 ];
 
   postPatch = ''
+    cd qwt-5.2
     sed -e "s@\$\$\[QT_INSTALL_PLUGINS\]@$out/lib/qt4/plugins@" -i designer/designer.pro
-    '';
+  '';
 
-  configurePhase = ''qmake INSTALLBASE=$out -after doc.path=$out/share/doc/${name} -r'';
+  configurePhase = ''
+    qmake INSTALLBASE=$out -after doc.path=$out/share/doc/${name} -r
+  '';
 
   meta = with stdenv.lib; {
     description = "Qt widgets for technical applications";

@@ -4665,10 +4665,10 @@ let
       ls -la ${pkgs.qwt}/include 
       ls -la ${pkgs.qwt}/lib/
       echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-      python configure.py --module-install-path=$out/lib/python2.7/site-packages/Qwt5 --sip-include-dirs=${pkgs.sip} --qt4 --qwt-sources ../qwt-5.2 
-      #python configure.py --module-install-path=$out/lib/python2.7/site-packages/Qwt5 --sip-include-dirs=${pkgs.sip} --qt4 -I ${pkgs.qwt}/include -Q ${pkgs.qwt}/lib/ 
-      echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-ls -la ../
+      # it seems we are really forced to use the bundled qwt-5.2 or it won't work
+      # we also HAVE to append -lpython2.7 for some unknown reason!??
+      python configure.py --module-install-path=$out/lib/python2.7/site-packages/Qwt5 --sip-include-dirs=${pkgs.sip} --qt4 --qwt-sources ../qwt-5.2  -lpython2.7
+      #python configure.py --module-install-path=$out/lib/python2.7/site-packages/Qwt5 --sip-include-dirs=${pkgs.sip} --qt4 -I ${pkgs.qwt}/include -Q ${pkgs.qwt}/lib/  -lpython2.7 
       echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
       popd
     '';
