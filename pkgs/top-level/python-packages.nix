@@ -4633,6 +4633,8 @@ let
     };
   };
 
+  # my bug report
+  # http://sourceforge.net/p/pyqwt/mailman/message/30306862/
   pyqwt = buildPythonPackage rec {
     name = "pyqwt-${version}";
     version = "5.2.0";
@@ -4648,28 +4650,48 @@ let
       sha256 = "02z7g60sjm3hx7b21dd8cjv73w057dwpgyyz24f701vdqzhcga4q";
     };
 
+
     doCheck = false;
 
     buildInputs = with self; [ pkgs.pyqt4 pkgs.qwt numpy ];
-    propagatedBuildInputs = with self; [ numpy pyqt4 pkgs.sip];
+    propagatedBuildInputs = with self; [ numpy pyqt4 pkgs.sip ];
 
     configurePhase = ''
-      cd configure
-      python configure.py -Q ${pkgs.qwt} --module-install-path=$out/lib/python2.7/site-packages/Qwt5 -I ${pkgs.qwt}/include/qwt
+      #rm -Rf qwt-5.2
+      pushd configure
+      
+      echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+      echo "${pkgs.qwt}"
+      ls -la ${pkgs.qwt}/include 
+      ls -la ${pkgs.qwt}/lib/
+      echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+      python configure.py --module-install-path=$out/lib/python2.7/site-packages/Qwt5 --sip-include-dirs=${pkgs.sip} --qt4 --qwt-sources ../qwt-5.2 
+      #python configure.py --module-install-path=$out/lib/python2.7/site-packages/Qwt5 --sip-include-dirs=${pkgs.sip} --qt4 -I ${pkgs.qwt}/include -Q ${pkgs.qwt}/lib/ 
+      echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+ls -la ../
+      echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+      popd
     '';
 
     buildPhase = ''
-      make
-      # prevent pyqwt from touching the pyqt4 store path
-      substituteInPlace "qwt5qt4/Makefile" \
-                --replace "${pkgs.pyqt4}"  \
-                "$out"
-      cd ..
       # rename from PyQt4.Qwt5 to Qwt5 (since we don't install it into the PyQt4 store path!
       find . -name \*.py | while read i
       do
         sed -i -e "s|PyQt4.Qwt5|Qwt5|" $i
       done
+      # rename from PyQt4.Qwt5 to Qwt5 (since we don't install it into the PyQt4 store path!
+      find . -name \*.sip | while read i
+      do
+        sed -i -e "s|PyQt4.Qwt5|Qwt5|" $i
+      done
+
+      pushd configure
+      make
+      # prevent pyqwt from touching the pyqt4 store path (lib/python2.7/site-packages/Qwt5)
+      substituteInPlace "qwt5qt4/Makefile" \
+                --replace "${pkgs.pyqt4}"  \
+                "$out"
+      popd
     '';
 
     installPhase = ''

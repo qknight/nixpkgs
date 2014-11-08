@@ -1,26 +1,37 @@
-diff --git a/qwtconfig.pri b/qwtconfig.pri
-index 1a56bfb..3ad540d 100644
+ff --git a/qwtconfig.pri b/qwtconfig.pri
+index 2be4a68..b4fc39d 100644
 --- a/qwtconfig.pri
 +++ b/qwtconfig.pri
-@@ -7,12 +7,14 @@ VER_MIN      = 2
- VER_PAT      = 3
+@@ -7,6 +7,8 @@ VER_MIN      = 2
+ VER_PAT      = 1
  VERSION      = $${VER_MAJ}.$${VER_MIN}.$${VER_PAT}
  
--unix {
--    INSTALLBASE    = /usr/local/qwt-$$VERSION
--}
--
--win32 {
--    INSTALLBASE    = C:/Qwt-$$VERSION
 +isEmpty(INSTALLBASE) {
-+    unix {
-+        INSTALLBASE    = /usr/local/qwt-$$VERSION
-+    }
-+    
-+    win32 {
-+        INSTALLBASE    = C:/Qwt-$$VERSION
-+    }
++
+ unix {
+     INSTALLBASE    = /usr/local/qwt-5.2.1
  }
+@@ -14,6 +16,7 @@ unix {
+ win32 {
+     INSTALLBASE    = C:/Qwt-5.2.1
+ }
++}
  
  target.path    = $$INSTALLBASE/lib
+ headers.path   = $$INSTALLBASE/include
+@@ -98,7 +101,7 @@ CONFIG     += QwtWidgets
+ # QwtSVGItem.
+ ######################################################################
+ 
+-#CONFIG     += QwtSVGItem
++CONFIG     += QwtSVGItem
+ 
+ ######################################################################
+ # You can use the MathML renderer of the Qt solutions package to 
+@@ -122,4 +125,4 @@ CONFIG     += QwtDesigner
+ # Otherwise you have to build them from the examples directory.
+ ######################################################################
+ 
+-#CONFIG     += QwtExamples
++CONFIG     += QwtExamples
 
