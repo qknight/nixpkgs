@@ -1,13 +1,6 @@
 { stdenv, fetchurl, qt4, pkgs}:
 
 stdenv.mkDerivation rec {
-  #name = "qwt-5.2.3";
-  #src = fetchurl {
-  #  url = "mirror://sourceforge/qwt/${name}.tar.bz2";
-  #  sha256 = "1dqa096mm6n3bidfq2b67nmdsvsw4ndzzd1qhl6hn8skcwqazzip";
-  #};
-  #patches = [ ./prefix-5.2.3.diff ];
-
   name = "qwt-${version}";
   version = "5.2.0";
   src = pkgs.fetchurl {
@@ -16,20 +9,20 @@ stdenv.mkDerivation rec {
   };
   patches = [ ./prefix-5.2.0.diff ];
 
-
   #name = "qwt-5.2.1";
-  #patches = [ ./prefix-5.2.1.diff ];
   #src = fetchurl {
   #  url = "mirror://sourceforge/qwt/${name}.tar.bz2";
   #  sha256 = "e2b8bb755404cb3dc99e61f3e2d7262152193488f5fbe88524eb698e11ac569f";
   #};
+  #patches = [ ./prefix-5.2.1.diff ];
 
   #name = "qwt-5.2.3";
-  #patches = [ ./prefix-5.2.3.diff ];
   #src = fetchurl {
-  #  url = "http://archive.ubuntu.com/ubuntu/pool/universe/q/qwt5/qwt5_5.2.3.orig.tar.gz";
-  #  sha256 = "5303941f265ba02e9b2144a6ca3556aaa48dda7b5225505ab9db549032efecd0";
+  #  url = "mirror://sourceforge/qwt/${name}.tar.bz2";
+  #  sha256 = "1dqa096mm6n3bidfq2b67nmdsvsw4ndzzd1qhl6hn8skcwqazzip";
   #};
+  #patches = [ ./prefix-5.2.3.diff ];
+
 
   propagatedBuildInputs = [ qt4 ];
 

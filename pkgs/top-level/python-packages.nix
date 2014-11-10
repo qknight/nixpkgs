@@ -4658,9 +4658,14 @@ let
     propagatedBuildInputs = with self; [ numpy pyqt4 pkgs.sip ];
 
     configurePhase = ''
+      echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+      pwd
+      ls -la qwt-5.2/src/
+
       #rm -Rf qwt-5.2
       pushd configure
       
+
       echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
       echo "${pkgs.qwt}"
       ls -la ${pkgs.qwt}/include 
@@ -4668,10 +4673,19 @@ let
       echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
       # it seems we are really forced to use the bundled qwt-5.2 or it won't work
       # we also HAVE to append -lpython2.7 for some unknown reason!??
-      python configure.py --module-install-path=$out/lib/python2.7/site-packages/Qwt5 --sip-include-dirs=${pkgs.sip} --qt4 --qwt-sources ../qwt-5.2  -lpython2.7
-      #python configure.py --module-install-path=$out/lib/python2.7/site-packages/Qwt5 --sip-include-dirs=${pkgs.sip} --qt4 -I ${pkgs.qwt}/include -Q ${pkgs.qwt}/lib/  -lpython2.7 
+
+
+
+     #python configure.py --help
+     # below is b
+     #python configure.py --module-install-path=$out/lib/python2.7/site-packages/Qwt5 --sip-include-dirs=${pkgs.sip} -lpython2.7 --qt4 -Q ../qwt-5.2  
+     # below is a
+     #python configure.py --module-install-path=$out/lib/python2.7/site-packages/Qwt5 --sip-include-dirs=${pkgs.sip} -lpython2.7 --qt4 -Q ${pkgs.qwt}/src 
+     
+     # after comparing output a and b with meld it seems that configure.py rather needs the qwt source from fetchurl and not ${pkgs.qwt}/src 
+     
       echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-      popd
+      popd 
     '';
 
     buildPhase = ''
