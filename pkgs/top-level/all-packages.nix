@@ -8877,7 +8877,13 @@ let
 
   # -- Linux kernel expressions ------------------------------------------------
 
-  linuxHeaders = linuxHeaders_3_12;
+  #linuxHeaders = linuxHeaders_3_12;
+  # systemd seems to force linuxHeaders_3_14 which i replaced to use 3.8 odroid thingy
+  linuxHeaders_default = callPackage ../os-specific/linux/kernel-headers/default.nix { 
+    kernel = linux_odroid_u; 
+  };
+
+  linuxHeaders = linuxHeaders_default;
 
   linuxHeaders24Cross = forceNativeDrv (import ../os-specific/linux/kernel-headers/2.4.nix {
     inherit stdenv fetchurl perl;
@@ -8889,9 +8895,10 @@ let
     cross = assert crossSystem != null; crossSystem;
   });
 
+
   linuxHeaders_3_12 = callPackage ../os-specific/linux/kernel-headers/3.12.nix { };
 
-  linuxHeaders_3_14 = callPackage ../os-specific/linux/kernel-headers/3.14.nix { };
+  #linuxHeaders_3_14 = callPackage ../os-specific/linux/kernel-headers/3.14.nix { };
 
   # We can choose:
   linuxHeadersCrossChooser = ver : if ver == "2.4" then linuxHeaders24Cross
@@ -9377,7 +9384,7 @@ let
   sysstat = callPackage ../os-specific/linux/sysstat { };
 
   systemd = callPackage ../os-specific/linux/systemd {
-    linuxHeaders = linuxHeaders_3_14;
+    linuxHeaders = linuxHeaders_default;
   };
 
   systemtap = callPackage ../development/tools/profiling/systemtap {
