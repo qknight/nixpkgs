@@ -221,7 +221,12 @@ rec {
     kernelArch = "arm";
     kernelTarget = "zImage";
     uboot = null;
-  };
+    gcc = {
+      arch = "armv7-a";
+      fpu = "vfpv3-d16";
+      float = "hard";
+    };
+ };
 
   raspberrypi2 = {
     name = "raspberrypi2";
