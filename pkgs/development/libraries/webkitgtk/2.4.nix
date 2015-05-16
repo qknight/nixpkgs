@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, autoreconfHook, perl, python, ruby, bison, gperf, flex
+{ stdenv, fetchurl, perl, python, ruby, bison, gperf, flex
 , pkgconfig, which, gettext, gobjectIntrospection
 , gtk2, gtk3, wayland, libwebp, enchant, sqlite
 , libxml2, libsoup, libsecret, libxslt, harfbuzz
@@ -16,7 +16,7 @@ stdenv.mkDerivation rec {
     homepage = "http://webkitgtk.org/";
     license = licenses.bsd2;
     platforms = platforms.linux;
-    maintainers = [ maintainers.iyzsong ];
+    maintainers = with maintainers; [ iyzsong qknight ];
   };
 
   src = fetchurl {
@@ -24,14 +24,13 @@ stdenv.mkDerivation rec {
     sha256 = "0r651ar3p0f8zwl7764kyimxk5hy88cwy116pv8cl5l8hbkjkpxg";
   };
 
+  patches = [ ./webcore-svg-libxml-cflags.patch ];
+
   CC = "cc";
 
   prePatch = ''
     patchShebangs Tools/gtk
   '';
-
-  # patch *.in between autoreconf and configure
-  postAutoreconf = "patch -p1 < ${./webcore-svg-libxml-cflags.patch}";
 
   configureFlags = with stdenv.lib; [
     "--disable-geolocation"
@@ -44,7 +43,7 @@ stdenv.mkDerivation rec {
   dontAddDisableDepTrack = true;
 
   nativeBuildInputs = [
-    autoreconfHook perl python ruby bison gperf flex
+    perl python ruby bison gperf flex
     pkgconfig which gettext gobjectIntrospection
   ];
 
@@ -59,8 +58,5 @@ stdenv.mkDerivation rec {
     (if withGtk2 then gtk2 else gtk3)
   ];
 
-  # Probably OK now, see:
-  # https://bugs.webkit.org/show_bug.cgi?id=79498
-  enableParallelBuilding = true;
+  enableParallelBuilding = true; # build problems on Hydra
 }
-

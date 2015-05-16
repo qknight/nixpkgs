@@ -8007,6 +8007,7 @@ let
   };
 
   webkitgtk24x = callPackage ../development/libraries/webkitgtk/2.4.nix {
+    withGtk2 = false;
     harfbuzz = harfbuzz-icu;
     gst-plugins-base = gst_all_1.gst-plugins-base;
   };

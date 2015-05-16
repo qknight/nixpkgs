@@ -904,6 +904,101 @@ let
     };
   };
 
+  ##################################################################################33
+
+  # works!
+  gojs = buildGoPackage rec {
+    rev = "80bdfa8b7d0a0c118220bece71083f2527e7bbc4";
+    name = "gojs-${stdenv.lib.strings.substring 0 7 rev}";
+    goPackagePath = "github.com/sqs/gojs";
+    goPackageAliases = [ "github.com/crazy2be/gojs" ];
+    preBuild = ''
+      sed -i 's,github.com/crazy2be/gojs,github.com/sqs/gojs,g' go/src/github.com/sqs/gojs/examples/helloworld/helloworld.go
+      sed -i 's,github.com/crazy2be/gojs,github.com/sqs/gojs,g' go/src/github.com/sqs/gojs/examples/sample/sample.go
+      sed -i 's,javascriptcoregtk-3.0,javascriptcoregtk-4.0,g'  go/src/github.com/sqs/gojs/base.go
+    '';
+    doCheck = true;
+    src = fetchFromGitHub {
+      inherit rev;
+      owner = "sqs";
+      repo = "gojs";
+      sha256 = "0p7yjnpp9nc5i4lgpxsjbb4ns19f168yjljl87r359wlld4vy7sj";
+    };
+    propagatedBuildInputs = [ pkgconfig pkgs.webkitgtk ];
+    buildInputs = propagatedBuildInputs;
+  };
+
+  # works!
+  gotk3 = buildGoPackage rec {
+    rev = "7a6ce3ecbc883d4d6a7aa1821bbc9633751fd67e";
+    name = "gotk3-${stdenv.lib.strings.substring 0 7 rev}";
+    goPackagePath = "github.com/conformal/gotk3";
+    buildInputs = propagatedBuildInputs;
+    propagatedBuildInputs = [ pkgconfig pkgs.gnome3.gtk ];
+    checkPhase = ''
+        (cd go/src
+        find -type f -name \*_test.go -exec dirname {} \; | sort | uniq | while read d; do
+            ${pkgs.xvfb_run}/bin/xvfb-run -a go test -p 1 -v $d
+        done)
+    '';
+    doCheck = true;
+    src = fetchFromGitHub {
+      inherit rev;
+      owner = "conformal";
+      repo = "gotk3";
+      sha256 = "0lrav6s28s8vxsvsdr8gf6kzyv00yr3pxq4k66rri9wz0zcc05b1";
+    };
+  };
+
+  # test fail with webkit2gtk-3.0 and webkit2gtk-4.0
+  gowebkit2 = buildGoPackage rec {
+    rev = "22d89604526bbeafa4492c7f5c07ac643dff6e45";
+    name = "gowebkit2-${stdenv.lib.strings.substring 0 7 rev}";
+    goPackagePath = "github.com/sourcegraph/go-webkit2";
+    preBuild = ''
+      sed -i 's,webkit2gtk-3.0,webkit2gtk-4.0,g' go/src/github.com/sourcegraph/go-webkit2/webkit2/webview.go
+    '';
+    checkPhase = ''
+      (cd go/src
+      find -type f -name \*_test.go -exec dirname {} \; | sort | uniq | while read d; do
+          ${pkgs.xvfb_run}/bin/xvfb-run -a go test -p 1 -v $d
+      done)
+    '';
+    doCheck = true;
+    src = fetchFromGitHub {
+      inherit rev;
+      owner  = "sourcegraph";
+      repo   = "go-webkit2";
+      sha256 = "0jgfwi1qscl271kc3n77jkdgb62ayhd9va0g85pbc9gp58rcdqb4";
+    };
+    propagatedBuildInputs = [ pkgs.gnome3.gtk pkgs.webkitgtk gotk3 gojs ];
+    buildInputs = propagatedBuildInputs ++ [ pkgs.xlibs.xorgserver pkgs.xvfb_run ];
+  };
+
+  # fails -> i don't even know as gowebkit2 still is not working
+  webloop = buildGoPackage rec {
+    rev = "b28fdf4cdd381e7fb68f06ecbff1afd4098edd0e";
+    name = "webloop-${stdenv.lib.strings.substring 0 7 rev}";
+    goPackagePath = "github.com/sourcegraph/webloop";
+    #checkPhase = ''
+    #    (cd go/src
+    #    find -type f -name \*_test.go -exec dirname {} \; | sort | uniq | while read d; do
+    #        ${pkgs.xvfb_run}/bin/xvfb-run -a go test -p 1 -v $d
+    #    done)
+    #'';
+    #doCheck = true;
+   src = fetchFromGitHub {
+      inherit rev;
+      owner  = "sourcegraph";
+      repo   = "webloop";
+      sha256 = "0ij93xpi7rcmgcm9bi4cqxcc48q8pjzky2mv2rzd8mv0l388d27r";
+    };
+    propagatedBuildInputs = [ pkgs.webkitgtk gowebkit2 gojs ];
+    buildInputs = propagatedBuildInputs;
+  };
+
+  ##################################################################################33
+
   gox = buildGoPackage rec {
     rev = "e8e6fd4fe12510cc46893dff18c5188a6a6dc549";
     name = "gox-${stdenv.lib.strings.substring 0 7 rev}";
