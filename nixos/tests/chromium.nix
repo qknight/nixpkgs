@@ -8,6 +8,9 @@ import ./make-test.nix (
 , ...
 }: rec {
   name = "chromium";
+  meta = with pkgs.stdenv.lib; {
+    maintainers = [ aszlig ];
+  };
 
   enableOCR = true;
 

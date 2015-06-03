@@ -1,5 +1,8 @@
 import ./make-test.nix ({ pkgs, ... }: {
   name = "trac";
+  meta = with pkgs.stdenv.lib; {
+    maintainers = [ eelco chaoflow ];
+  };
 
   nodes = {
     storage =

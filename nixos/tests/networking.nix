@@ -1,4 +1,4 @@
-import ./make-test.nix ({ networkd, test, ... }:
+import ./make-test.nix ({ pkgs, networkd, test, ... }:
   let
     router = { config, pkgs, ... }:
       with pkgs.lib;
