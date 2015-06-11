@@ -6077,7 +6077,9 @@ let
 
   libcredis = callPackage ../development/libraries/libcredis { };
 
-  libctemplate = callPackage ../development/libraries/libctemplate { };
+  libctemplate = libctemplate23;
+  libctemplate23 = callPackage ../development/libraries/libctemplate { };
+  libctemplate22 = callPackage ../development/libraries/libctemplate/2.2.nix { };
 
   libcouchbase = callPackage ../development/libraries/libcouchbase { };
 
@@ -13368,6 +13370,7 @@ let
 
   mysqlWorkbench = newScope gnome ../applications/misc/mysql-workbench {
     lua = lua5_1;
+    libctemplate = libctemplate22;
     inherit (pythonPackages) pexpect paramiko;
   };
 
