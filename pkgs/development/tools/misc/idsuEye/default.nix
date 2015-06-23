@@ -54,8 +54,9 @@ stdenv.mkDerivation rec {
     mkdir $out/fw
     cp fw/* $out/fw
 
-    mkdir $out/include
-    cp -r include/* $out/include
+    mkdir $out/includes
+    mv include/ueye.h include/uEye.h
+    cp -r include/* $out/includes
 
     mkdir -p $out/share/doc
     cp -r doc/* $out/share/doc

@@ -10552,6 +10552,7 @@ let
   id3v2 = callPackage ../applications/audio/id3v2 { };
 
   idsuEye = callPackage ../development/tools/misc/idsuEye { };
+  idsuEye-example = callPackage ../development/tools/misc/idsuEye/idsuEye-example.nix { };
   
   ifenslave = callPackage ../os-specific/linux/ifenslave { };
 

@@ -1,0 +1,31 @@
+From a7049885d4d89ca07c538f978f12ad40d6fdaea7 Mon Sep 17 00:00:00 2001
+From: Joachim Schiele <js@lastlog.de>
+Date: Wed, 24 Jun 2015 00:12:36 +0200
+Subject: [PATCH] f
+
+---
+ uEyeDemo.pro | 6 ++++++
+ 1 file changed, 6 insertions(+)
+ mode change 100644 => 100755 uEyeDemo.pro
+
+diff --git a/uEyeDemo.pro b/uEyeDemo.pro
+old mode 100644
+new mode 100755
+index 963e62b..1eaeecf
+--- a/uEyeDemo.pro
++++ b/uEyeDemo.pro
+@@ -40,3 +40,11 @@ INCLUDEPATH += include \
+     . \
+     src
+ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
++
++
++TARGET.path  = $$PREFIX/$$BINDIR
++TARGET.files += ueyedemo
++INSTALLS += TARGET
++ 
++
++
+-- 
+2.3.0
+
