@@ -9,7 +9,7 @@
 
 let self = _self // overrides; _self = with self; {
 
-  inherit (pkgs) buildPerlPackage fetchurl stdenv perl fetchsvn gnused;
+  inherit (pkgs) buildPerlPackage fetchurl stdenv perl fetchsvn gnused fetchgit;
 
   inherit (stdenv.lib) maintainers;
 
@@ -160,7 +160,20 @@ let self = _self // overrides; _self = with self; {
       url = mirror://cpan/authors/id/K/KA/KAZEBURO/Apache-LogFormat-Compiler-0.13.tar.gz;
       sha256 = "b4185125501e288efbc664da8b723ff86f0b69eb57d3c7c69c7d2069aab0efb0";
     };
-    buildInputs = [ HTTPMessage TestRequires TryTiny URI ];
+    buildInputs = [ HTTPMessage TestRequires TryTiny URI CPANMeta ];
+    configurePhase = ''
+      perl Build.PL
+    '';
+    buildPhase = ''
+      ./Build 
+      ./Build test
+    '';
+    doCheck = false;
+    installPhase = ''
+      mkdir $out
+      ./Build install PREFIX=$out/
+    '';
+
     meta = {
       homepage = https://github.com/kazeburo/Apache-LogFormat-Compiler;
       description = "Compile a log format string to perl-code";
@@ -607,7 +620,168 @@ let self = _self // overrides; _self = with self; {
       license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
     };
   };
+  
+  PlackAppWebSocket = buildPerlModule {
+    name = "Plack-App-WebSocket-0.05";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/T/TO/TOSHIOITO/Plack-App-WebSocket-0.05.tar.gz;
+      sha256 = "d9d2192f2461d2cb294a695f55fb4f2153371b58ea32c73426b54ab9a22a4210";
+    };
+    buildInputs = [ AnyEvent AnyEventWebSocketClient ModuleBuildPrereqsFromCPANfile Plack ProtocolWebSocket TestRequires TestTCP ];
+    propagatedBuildInputs = [ AnyEvent AnyEventWebSocketServer DevelGlobalDestruction Plack TryTiny ];
+    meta = {
+      description = "WebSocket server as a PSGI application";
+      license = "perl";
+    };
+  };
 
+  AnyEventWebSocketServer = buildPerlModule {
+    name = "AnyEvent-WebSocket-Server-0.06";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/T/TO/TOSHIOITO/AnyEvent-WebSocket-Server-0.06.tar.gz;
+      sha256 = "b4962f5c8139107d5ae430ee28e66017a2d57c713b2c1496bcfa29eba868a953";
+    };
+    buildInputs = [ AnyEvent AnyEventWebSocketClient ModuleBuildPrereqsFromCPANfile ProtocolWebSocket TestMemoryCycle TestRequires TryTiny ];
+    propagatedBuildInputs = [ AnyEvent AnyEventWebSocketClient ProtocolWebSocket TryTiny ];
+    meta = {
+      description = "WebSocket server for AnyEvent";
+      license = "perl";
+    };
+  };
+
+    AnyEventWebSocketClient = buildPerlModule {
+    name = "AnyEvent-WebSocket-Client-0.32";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/P/PL/PLICEASE/AnyEvent-WebSocket-Client-0.32.tar.gz;
+      sha256 = "30b4741498726fbe93552ef8d58a0013bccb8f58dfc1357d2b231b00b41ea86b";
+    };
+    buildInputs = [ ProtocolWebSocket ];
+    propagatedBuildInputs = [ AnyEvent Moo PerlXMaybe ProtocolWebSocket URI URIws ];
+    meta = {
+      homepage = http://perl.wdlabs.com/AnyEvent-WebSocket-Client;
+      description = "WebSocket client for AnyEvent";
+      license = "perl";
+    };
+  };
+
+    ProtocolWebSocket = buildPerlModule {
+    name = "Protocol-WebSocket-0.19";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/V/VT/VTI/Protocol-WebSocket-0.19.tar.gz;
+      sha256 = "85be8d21b6ea4039e6b3365c5b5eda1afac6f278cd619c7fedae0d739b5cc998";
+    };
+    meta = {
+      homepage = https://github.com/vti/protocol-websocket;
+      description = "WebSocket protocol";
+      license = "perl";
+    };
+  };
+
+    PerlXMaybe = buildPerlPackage {
+    name = "PerlX-Maybe-1.001";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/T/TO/TOBYINK/PerlX-Maybe-1.001.tar.gz;
+      sha256 = "bfb24a5e0abd91532a99753f36b7ebb90d8f9a3f93b5750d9194615158d3c9d8";
+    };
+    meta = {
+      homepage = https://metacpan.org/release/PerlX-Maybe;
+      description = "Return a pair only if they are both defined";
+      license = "perl";
+    };
+  };
+  URIws = buildPerlPackage {
+    name = "URI-ws-0.03";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/P/PL/PLICEASE/URI-ws-0.03.tar.gz;
+      sha256 = "6e6b0e4172acb6a53c222639c000608c2dd61d50848647482ac8600d50e541ef";
+    };
+    buildInputs = [ URI ];
+    propagatedBuildInputs = [ URI ];
+    meta = {
+      homepage = http://perl.wdlabs.com/URI-ws/;
+      description = "WebSocket support for URI package";
+      license = "perl";
+    };
+  };
+
+    ModuleBuildPrereqsFromCPANfile = buildPerlModule {
+    name = "Module-Build-Prereqs-FromCPANfile-0.02";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/T/TO/TOSHIOITO/Module-Build-Prereqs-FromCPANfile-0.02.tar.gz;
+      sha256 = "94d17867bea8e04bf8a636bcbfb78c5d432cb8fbc0e046b88445c3983e089e29";
+    };
+    configurePhase = ''
+      ${perl}/bin/perl Build.PL --prefix=$out
+      ./Build 
+      ./Build test
+    '';
+    buildPhase = ''
+    ''; 
+    doCheck = false;
+    installPhase = ''
+      mkdir $out
+      ./Build install PREFIX=$out/
+    '';
+    propagatedBuildInputs = [ ModuleCPANfile ];
+    meta = {
+      description = "Construct prereq parameters of Module::Build from cpanfile";
+      license = "perl";
+    };
+  };
+  ModuleCPANfile = buildPerlPackage {
+    name = "Module-CPANfile-1.1002";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/M/MI/MIYAGAWA/Module-CPANfile-1.1002.tar.gz;
+      sha256 = "bf95c25b4c5c22ec045cff61557bc693bc062e4714615ebbbafe4070f4d53cfd";
+    };
+    propagatedBuildInputs = [ JSONPP ];
+    meta = {
+      homepage = https://github.com/miyagawa/cpanfile;
+      description = "Parse cpanfile";
+      license = "perl";
+    };
+  };
+
+  PlackMiddlewareWebSocket = buildPerlPackage {
+    name = "Plack-Middleware-WebSocket";
+    src = /home/joachim/Desktop/projects/request-tracker/Plack-Middleware-WebSocket;
+#    src = fetchgit {
+#      url = https://github.com/nixcloud/Plack-Middleware-WebSocket.git;
+#      rev = "d238533c3a8f66f0188078cd8079519947c3f5c0";
+#      sha256 = "16g2q6x2jbwapx6rrlzg4yha68arxxiycldv7lrrwzzv73g6lb9p";
+#    };
+    buildPhase = ''
+      perl Makefile.PL PREFIX=$out/
+    '';
+    installPhase = ''
+      mkdir $out
+      make install PREFIX=$out/
+    '';
+    buildInputs = [ Plack ModuleInstall   ];
+    propagatedBuildInputs = [ AnyEvent Twiggy ] ;
+    meta = {
+      description = "Websocket support for Plack";
+      license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
+    };
+  };
+  
+  Twiggy = buildPerlPackage {
+    name = "Twiggy-0.1025";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/M/MI/MIYAGAWA/Twiggy-0.1025.tar.gz;
+      sha256 = "d75adf963aa815c971f0f171c694ed008da6016b337c0d3fcd8759cf979da7a8";
+    };
+    buildInputs = [ TestRequires TestTCP ];
+    propagatedBuildInputs = [ AnyEvent HTTPMessage Plack TryTiny ];
+    meta = {
+      homepage = https://github.com/miyagawa/Twiggy;
+      description = "AnyEvent HTTP server for PSGI (like Thin)";
+      license = "perl";
+    };
+  };
+
+
+  
   BusinessISMN = buildPerlPackage {
     name = "Business-ISMN-1.11";
     src = fetchurl {
@@ -7242,18 +7416,19 @@ let self = _self // overrides; _self = with self; {
     };
   };
 
-  ModuleBuild = buildPerlPackage {
-    name = "Module-Build-0.4005";
+
+    ModuleBuild = buildPerlPackage {
+    name = "Module-Build-0.4216";
     src = fetchurl {
-      url = mirror://cpan/authors/id/L/LE/LEONT/Module-Build-0.4005.tar.gz;
-      sha256 = "eb2522507251550f459c11223ea6d86b34f1dee9b3e3928d0d6a0497505cb7ef";
+      url = mirror://cpan/authors/id/L/LE/LEONT/Module-Build-0.4216.tar.gz;
+      sha256 = "661e030ee9f83027e8a5067788175d53050b5d1292be1bfd85d44ad141fb7671";
     };
-    buildInputs = [ CPANMeta ExtUtilsCBuilder ];
     meta = {
       description = "Build and install Perl modules";
-      license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
+      license = "perl";
     };
   };
+
 
   ModuleBuildDeprecated = buildPerlModule {
     name = "Module-Build-Deprecated-0.4210";
@@ -9171,21 +9346,69 @@ let self = _self // overrides; _self = with self; {
     };
   };
 
-  Plack = buildPerlPackage {
-    name = "Plack-1.0031";
+
+    Plack = buildPerlPackage {
+    name = "Plack-1.0039";
     src = fetchurl {
-      url = mirror://cpan/authors/id/M/MI/MIYAGAWA/Plack-1.0031.tar.gz;
-      sha256 = "0vvppxs36729lggrx4s1gn37lzsm794wfkm3k386bwhkmk7sr31i";
+      url = mirror://cpan/authors/id/M/MI/MIYAGAWA/Plack-1.0039.tar.gz;
+      sha256 = "d24a572e88644c7d39c7e6ff1af005b728dec94a878cf06d9027ab7d1a2fd0a9";
     };
     buildInputs = [ FileShareDirInstall TestRequires ];
-    propagatedBuildInputs = [ ApacheLogFormatCompiler DevelStackTrace DevelStackTraceAsHTML FileShareDir FilesysNotifySimple HTTPBody HTTPMessage HashMultiValue LWP StreamBuffered TestTCP TryTiny URI ];
+    propagatedBuildInputs = [ ApacheLogFormatCompiler CookieBaker DevelStackTrace DevelStackTraceAsHTML FileShareDir FilesysNotifySimple HTTPBody HTTPHeadersFast HTTPMessage HashMultiValue StreamBuffered TestTCP TryTiny URI ];
     meta = {
       homepage = https://github.com/plack/Plack;
       description = "Perl Superglue for Web frameworks and Web Servers (PSGI toolkit)";
-      license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
+      license = "perl";
     };
   };
 
+  CookieBaker = buildPerlModule {
+    name = "Cookie-Baker-0.06";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/K/KA/KAZEBURO/Cookie-Baker-0.06.tar.gz;
+      sha256 = "4b1fb173d6977af902fa018242a0b28099e5612a2fa43e0160380781f5d76ea0";
+    };
+    buildInputs = [ TestTime ];
+    propagatedBuildInputs = [ URI ];
+    meta = {
+      homepage = https://github.com/kazeburo/Cookie-Baker;
+      description = "Cookie string generator / parser";
+      license = "perl";
+    };
+  };
+
+    HTTPHeadersFast = buildPerlModule {
+    name = "HTTP-Headers-Fast-0.20";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/T/TO/TOKUHIROM/HTTP-Headers-Fast-0.20.tar.gz;
+      sha256 = "d2f4c9724618e74f300fc746498fb5849692ef0cfc4af47fe499c4063969e520";
+    };
+    buildInputs = [ TestRequires ];
+    propagatedBuildInputs = [ HTTPDate ];
+    meta = {
+      homepage = https://github.com/tokuhirom/HTTP-Headers-Fast;
+      description = "Faster implementation of HTTP::Headers";
+      license = "perl";
+    };
+  };
+
+    TestTime = buildPerlPackage {
+    name = "Test-Time-0.04";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/S/SA/SATOH/Test-Time-0.04.tar.gz;
+      sha256 = "d8c1bc57f9767ae8122fc4ab873bd991cb9ea8e9422c66399acb66770fa5c2ea";
+    };
+    buildPhase = "make";
+    installPhase = "make install";
+    doCheck = false; # test fails, maybe nixos specific
+
+    meta = {
+      description = "Overrides the time() and sleep() core functions for testing";
+      license = "perl";
+    };
+  };
+
+  
   PlackMiddlewareDebug = buildPerlPackage {
     name = "Plack-Middleware-Debug-0.14";
     src = fetchurl {
