@@ -154,6 +154,245 @@ let self = _self // overrides; _self = with self; {
     propagatedBuildInputs = [ Mouse ];
   };
 
+  RTExtensionWebSocket = buildPerlPackage rec {
+    name = "RT-Extension-WebSocket-0.1";
+    src = /home/joachim/Desktop/projects/request-tracker/rt-extension-websocket;
+    propagatedBuildInputs = [  ];
+  };
+  RTExtensionRest2 = buildPerlPackage rec {
+    name = "RT-Extension-Rest2-0.1";
+    src = /home/joachim/Desktop/projects/request-tracker/rt-extension-rest2;
+    propagatedBuildInputs = [  ];
+    buildInputs = [ namespaceautoclean MooseXRoleParameterized MooseXNonMoose ClassMethodModifiers Moose Plack JSON ModulePath  PodPOM WebMachine PlackMiddlewareRequestHeaders PlackMiddlewareReverseProxyPath WebMachine WebSimple];
+  };
+# Warning: prerequisite MooseXNonMoose 0 not found.
+# Warning: prerequisite MooseX::Role::Parameterized 0 not found.
+# Warning: prerequisite namespace::autoclean 0 not found.
+
+#  RTExtensionKanban = buildPerlPackage rec {
+#    name = "RT-Extension-Kanban-0.1";
+#    src = /home/joachim/Desktop/projects/request-tracker/rt-extension-kanban;
+#    propagatedBuildInputs = [ RTExtensionWebSocket ];
+#  };
+
+  WebSimple = buildPerlPackage {
+    name = "Web-Simple-0.031";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/M/MS/MSTROUT/Web-Simple-0.031.tar.gz;
+      sha256 = "208f7ca799bc93e7a855647b1f4d447a6874fa4bd0da09304c3b52f97c4baebf";
+    };
+    buildInputs = [ DataDumperConcise ];
+    propagatedBuildInputs = [ Moo Plack SyntaxKeywordGather strictures warningsillegalproto ];
+    meta = {
+      description = "A quick and easy way to build simple web applications";
+      license = "perl";
+    };
+  };
+    warningsillegalproto = buildPerlPackage {
+    name = "warnings-illegalproto-0.001003";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/F/FR/FREW/warnings-illegalproto-0.001003.tar.gz;
+      sha256 = "3dcb31b37e5b7b255285874c341736b060d1d276e085e222f33712cbeb3d1bb1";
+    };
+    propagatedBuildInputs = [ strictures ];
+    meta = {
+      homepage = https://github.com/frioux/warnings-illegalproto;
+      description = "Disable illegal prototype warnings on old Perls";
+      license = "perl";
+    };
+  };
+  AnyEventRedisRipeRedis = buildPerlPackage {
+    name = "AnyEvent-Redis-RipeRedis-1.48";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/I/IP/IPH/AnyEvent-Redis-RipeRedis-1.48.tar.gz;
+      sha256 = "146543c0f81c9ffbe750962017720adb4a3a7ab2d26667395472c6eb4e3d3720";
+    };
+    buildInputs = [ TestFatal TestTCP ];
+    propagatedBuildInputs = [ AnyEvent ];
+    meta = {
+      homepage = https://github.com/iph0/AnyEvent-Redis-RipeRedis;
+      description = "Flexible non-blocking Redis client with reconnect feature";
+      license = "perl";
+    };
+  };
+
+  
+  SyntaxKeywordGather = buildPerlPackage {
+    name = "Syntax-Keyword-Gather-1.003001";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/F/FR/FREW/Syntax-Keyword-Gather-1.003001.tar.gz;
+      sha256 = "ba97d1a04bf8a0581256534c288129e2a79768d65f2dd4e70e3a35f07cc9ab77";
+    };
+    propagatedBuildInputs = [ SubExporterProgressive ];
+    meta = {
+      homepage = https://github.com/frioux/Syntax-Keyword-Gather;
+      description = "Implements the Perl 6 'gather/take' control structure in Perl 5";
+      license = "perl";
+    };
+  };
+
+
+  PodPOM = buildPerlPackage {
+    name = "Pod-POM-2.01";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/N/NE/NEILB/Pod-POM-2.01.tar.gz;
+      sha256 = "1b50fba9bbdde3ead192beeba0eaddd0c614e3afb1743fa6fff805f57c56f7f4";
+    };
+    buildInputs = [ FileSlurper TestDifferences TextDiff ];
+    meta = {
+      homepage = https://github.com/neilb/Pod-POM;
+      description = "POD Object Model";
+      license = "perl";
+    };
+  };
+  IOHandleUtil = buildPerlPackage rec {
+    name = "IO-Handle-Util-0.01";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/N/NU/NUFFIN/IO-Handle-Util-0.01.tar.gz;
+      sha256 = "d3bc98b3a2b38acae591075d7af2cf99bfcf082874ac3e5c4b2af9019f21e7bc";
+    };
+    buildInputs = propagatedBuildInputs;
+    propagatedBuildInputs = [ IOString SubExporter TestSimple CPAN Testuseok asa ];
+    meta = {
+      license = "unknown";
+    };
+  };
+  
+  
+  asa = buildPerlPackage {
+    name = "asa-1.03";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/A/AD/ADAMK/asa-1.03.tar.gz;
+      sha256 = "22827b5a726d14e879514b3407ea234ce510433b9c61d082d92ad9e11ea827f1";
+    };
+    meta = {
+      description = "Lets your class/object say it works like something else";
+      license = "perl";
+    };
+  };
+
+  HTTPHeadersActionPack = buildPerlPackage {
+    name = "HTTP-Headers-ActionPack-0.09";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/D/DR/DROLSKY/HTTP-Headers-ActionPack-0.09.tar.gz;
+      sha256 = "c78111ab857e48c69824903d4b6ce8293feffc6b5d670db550a767f853acc7da";
+    };
+    buildInputs = [ HTTPMessage TestFatal TestWarnings ];
+    propagatedBuildInputs = [ HTTPDate HTTPMessage ModuleRuntime SubExporter URI CPAN ];
+#     doCheck = false;
+    meta = {
+      description = "HTTP Action, Adventure and Excitement";
+      license = "perl";
+    };
+  };
+
+  WebMachine = buildPerlPackage {
+    name = "Web-Machine-0.16";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/D/DR/DROLSKY/Web-Machine-0.16.tar.gz;
+      sha256 = "e5366cee017817f532b8f4ed979d263bc0dbeced667005dcf589da4ed0f4606c";
+    };
+    buildInputs = [ HTTPMessage NetHTTP Plack TestFailWarnings TestFatal ];
+    propagatedBuildInputs = [ HTTPHeadersActionPack HTTPMessage HashMultiValue IOHandleUtil ModuleRuntime Plack SubExporter TryTiny CPAN];
+    meta = {
+      homepage = http://metacpan.org/release/Web-Machine;
+      description = "A Perl port of Webmachine";
+      license = "perl";
+    };
+  };
+
+  PlackMiddlewareRequestHeaders = buildPerlPackage {
+    name = "Plack-Middleware-RequestHeaders-0.05";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/W/WR/WREIS/Plack-Middleware-RequestHeaders-0.05.tar.gz;
+      sha256 = "67836616dd7f440bca7c85f67b7061a96f740fe9bbb10c456785695074a26e4d";
+    };
+    buildInputs = [ Plack ];
+    propagatedBuildInputs = [ Plack ];
+    meta = {
+      homepage = https://github.com/wreis/Plack-Middleware-RequestHeaders;
+      description = "Modify HTTP request headers";
+      license = "perl";
+    };
+  };
+  PlackMiddlewareReverseProxyPath = buildPerlPackage {
+    name = "Plack-Middleware-ReverseProxyPath-0.03";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/B/BO/BOWMANBS/Plack-Middleware-ReverseProxyPath-0.03.tar.gz;
+      sha256 = "0e2d74b1c3d3a69ed42f02834f54c1b493a96f2fb33c05662840cbd0a4d712d7";
+    };
+    propagatedBuildInputs = [ Plack ];
+    meta = {
+      description = "Adjust proxied env to match client-facing";
+      license = "perl";
+    };
+  };
+
+  
+  DistZillaMintingProfileRTx = buildPerlPackage {
+    name = "Dist-Zilla-MintingProfile-RTx-0.12";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/A/AL/ALEXMV/Dist-Zilla-MintingProfile-RTx-0.12.tar.gz;
+      sha256 = "e8c32e12e4250550bf17988d2f0152e72bad2231ba833df5300d5be8c804dd44";
+    };
+    propagatedBuildInputs = [ DistZilla ModuleInstallRTx ModuleInstallReadmeFromPod ];
+    meta = {
+      license = "gplv2";
+    };
+  };
+  ModuleInstallRTx = buildPerlPackage {
+    name = "Module-Install-RTx-0.37";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/A/AL/ALEXMV/Module-Install-RTx-0.37.tar.gz;
+      sha256 = "7ad7f47e0af9dec9b2b78e5b48bceed1aaf286f867b18bee9dbd75ae6c75faae";
+    };
+    propagatedBuildInputs = [ ModuleInstall ModuleInstallReadmeFromPod ];
+    meta = {
+      description = "RT extension installer";
+      license = "mit";
+    };
+  };
+  ModuleInstallReadmeFromPod = buildPerlPackage {
+    name = "Module-Install-ReadmeFromPod-0.22";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/B/BI/BINGOS/Module-Install-ReadmeFromPod-0.22.tar.gz;
+      sha256 = "9033c2863c2f989232279e086db2f4b3e099be8033d6b777aa1f29ed81f2deff";
+    };
+    buildInputs = [ CaptureTiny ];
+    propagatedBuildInputs = [ ModuleInstall ];
+    meta = {
+      homepage = https://github.com/bingos/module-install-readmefrompod/tree;
+      description = "A Module::Install extension to automatically convert POD to a README";
+      license = "perl";
+    };
+  };
+
+  TermUI = buildPerlPackage {
+    name = "Term-UI-0.46";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/B/BI/BINGOS/Term-UI-0.46.tar.gz;
+      sha256 = "91946c80d7f4aab0ca4bfedc3bbe0a75b37cab1a29bd7bca3b3b7456d417e9a6";
+    };
+    propagatedBuildInputs = [ LogMessageSimple ];
+    meta = {
+      description = "User interfaces via Term::ReadLine made easy";
+      license = "perl";
+    };
+  };
+  LogMessageSimple = buildPerlPackage {
+    name = "Log-Message-Simple-0.10";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/B/BI/BINGOS/Log-Message-Simple-0.10.tar.gz;
+      sha256 = "aa12d1a4c0ac260b94d448fa01feba242a8a85cb6cbfdc66432e3b5b468add96";
+    };
+    propagatedBuildInputs = [ LogMessage ];
+    meta = {
+      description = "Simplified interface to Log::Message";
+      license = "perl";
+    };
+  };
+
+  
   ApacheLogFormatCompiler = buildPerlModule {
     name = "Apache-LogFormat-Compiler-0.13";
     src = fetchurl {
@@ -7732,15 +7971,57 @@ let self = _self // overrides; _self = with self; {
   };
 
   Mojolicious = buildPerlPackage {
-    name = "Mojolicious-4.63";
+    name = "Mojolicious-6.50";
     src = fetchurl {
-      url = mirror://cpan/authors/id/S/SR/SRI/Mojolicious-4.63.tar.gz;
-      sha256 = "f20f77e86fc560dac1c958e765ed64242dcf6343939ed605b45f2bbe2596d5e9";
+      url = mirror://cpan/authors/id/S/SR/SRI/Mojolicious-6.50.tar.gz;
+      sha256 = "410c17d74082711c5409c7a439e1280111a7bf5036360307dd2f25ef3dab2dbe";
+    };
+    propagatedBuildInputs = [ JSONPP ];
+    meta = {
+      homepage = http://mojolicious.org;
+      description = "Real-time web framework";
+      license = "artistic_2";
+    };
+  };
+
+  MojoRedis2 = buildPerlPackage {
+    name = "Mojo-Redis2-0.24";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/J/JH/JHTHORSEN/Mojo-Redis2-0.24.tar.gz;
+      sha256 = "cc3f26daba871b1ef0478dd4cd8f6820e95cc24513c1fa689cea228dd401ff68";
+    };
+    propagatedBuildInputs = [ Mojolicious ProtocolRedis ];
+    meta = {
+      homepage = https://github.com/jhthorsen/mojo-redis2;
+      description = "Pure-Perl non-blocking I/O Redis driver";
+      license = "artistic_2";
+    };
+  };
+  
+    MojoliciousPluginAuthentication = buildPerlPackage {
+    name = "Mojolicious-Plugin-Authentication-1.29";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/M/MA/MADCAT/Mojolicious-Plugin-Authentication-1.29.tar.gz;
+      sha256 = "19665fdca045c469fed16d011d4b730ef0624e73338bc95e7ad8eb69a00a6555";
+    };
+    buildInputs = [ Mojolicious ];
+    propagatedBuildInputs = [ Mojolicious ];
+    meta = {
+      homepage = http://search.cpan.org/dist/Mojolicious-Plugin-Authentication/;
+      description = "A plugin to make authentication a bit easier";
+      license = "perl";
+    };
+  };
+
+  ProtocolRedis = buildPerlPackage {
+    name = "Protocol-Redis-1.0004";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/U/UN/UNDEF/Protocol-Redis-1.0004.tar.gz;
+      sha256 = "8c1641dc1168b299bafe43448c976949fbaca821e715e65b3ac582d20bd94e29";
     };
     meta = {
-      homepage = http://mojolicio.us;
-      description = "Real-time web framework";
-      license = stdenv.lib.licenses.artistic2;
+      description = "Redis protocol parser/encoder with asynchronous capabilities";
+      license = "perl";
     };
   };
 
@@ -9901,6 +10182,21 @@ let self = _self // overrides; _self = with self; {
     };
   };
 
+  AnyEventRedis = buildPerlPackage {
+    name = "AnyEvent-Redis-0.24";
+    src = fetchurl {
+      url = mirror://cpan/authors/id/D/DG/DGL/AnyEvent-Redis-0.24.tar.gz;
+      sha256 = "b664a5394c7ff62ecfbba5c208559312c062501729e3d9275309dabacfbaf794";
+    };
+    buildInputs = [ TestTCP ];
+    propagatedBuildInputs = [ AnyEvent ];
+    meta = {
+      description = "Non-blocking Redis client";
+      license = "perl";
+    };
+  };
+
+  
   RegexpAssemble = buildPerlPackage rec {
     name = "Regexp-Assemble-0.35";
     src = fetchurl {
