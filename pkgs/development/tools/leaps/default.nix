@@ -11,7 +11,6 @@ buildGoPackage rec {
     inherit rev;
     url = "https://github.com/jeffail/leaps";
     sha256 = "1qbgz48x9yi0w9yz39zsnnhx5nx2xmrns9v8hx28jah2bvag6sq7";
-    fetchSubmodules = false;  
   };
 
   goDeps = ./deps.json;
