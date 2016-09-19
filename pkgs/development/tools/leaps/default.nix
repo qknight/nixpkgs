@@ -3,14 +3,14 @@
 buildGoPackage rec {
   name = "leaps-${version}";
   version = "20160626-${stdenv.lib.strings.substring 0 7 rev}";
-  rev = "9320bd1a0759a3c22caee1e761dc221df396ac0c";
+  rev = "70524e3d02d0cf31f3d13737193a1459150781c8";
 
   goPackagePath = "github.com/jeffail/leaps";
 
   src = fetchgit {
     inherit rev;
     url = "https://github.com/jeffail/leaps";
-    sha256 = "1rsjr0hskv9yf8vgx9jqxnldzmbi0jqih8iryx7jl8jid8cvwwdj";
+    sha256 = "0w63y777h5qc8fwnkrbawn3an9px0l1zz3649x0n8lhk125fvchj";
     fetchSubmodules = false;  
   };
 
