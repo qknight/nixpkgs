@@ -5688,12 +5688,13 @@ in modules // {
   };
 
   easy-process = buildPythonPackage rec {
-    name = "EasyProcess-0.1.9";
+    name = "EasyProcess-0.2.3";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/E/EasyProcess/${name}.tar.gz";
-      sha256 = "c9980c0b0eeab97969305d8829bed966a3e28a77284e4f45a9b38fb23ce83633";
+      sha256 = "07z6485bjxkmx26mp1p1ww19d10qavw0s006bidzailsvk543qll";
     };
+    doCheck = false;
 
     meta = {
       description = "Easy to use python subprocess interface";
@@ -23118,6 +23119,8 @@ in modules // {
       url = "mirror://pypi/P/PyVirtualDisplay/${name}.tar.gz";
       sha256 = "aa6aef08995e14c20cc670d933bfa6e70d736d0b555af309b2e989e2faa9ee53";
     };
+
+    doCheck = false;
 
     meta = {
       description = "python wrapper for Xvfb, Xephyr and Xvnc";
